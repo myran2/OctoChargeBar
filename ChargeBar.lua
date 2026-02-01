@@ -15,11 +15,16 @@ function ChargeBar:Init(settings)
     assert(spellName, string.format("No spell name found for %d.", settings.spellId))
 
     local frameName = string.format("%s: %s", addonName, spellName)
-    print(frameName, 'Init()')
     self.spellId = settings.spellId
     self.showTicks = settings.showTicks
     self.tickColor = settings.tickColor
     self.tickWidth = settings.tickWidth
+    self.enabled = settings.enabled
+    self.reinitRequired = false
+
+    if not self.enabled then
+        return
+    end
 
     self.frame = self.frame or CreateFrame("Frame", frameName, UIParent, "BackdropTemplate")
     self.frame:SetSize(settings.barWidth, settings.barHeight)
@@ -65,10 +70,9 @@ function ChargeBar:Init(settings)
     end
 
     self.ticksContainer = self.ticksContainer or CreateFrame("Frame", "TicksContainer", self.innerContainer)
-    self.ticksContainer:SetPoint("LEFT", self.borderWidth)
-    -- ensure ticks render on top of the bar
-    self.ticksContainer:Raise()
-    self.ticksContainer.ticks = {}
+    self.ticksContainer:SetPoint("CENTER")
+    self.ticksContainer:SetSize(self.innerContainer:GetWidth(), self.innerContainer:GetHeight())
+    self.ticksContainer.ticks = self.ticksContainer.ticks or {}
 
     self:LEMSetup()
 
@@ -78,6 +82,10 @@ end
 -- Sets up bars based on max charges.
 -- Can't be called while Secret restrictions are active!
 function ChargeBar:Setup()
+    if not self.enabled then
+        return
+    end
+
     local spellName = C_Spell.GetSpellName(self.spellId)
     assert(spellName, string.format("No spell name found for %d.", self.spellId))
 
@@ -92,40 +100,36 @@ function ChargeBar:Setup()
 
     self.refreshCharge:SetSize(chargeWidth, self.innerContainer:GetHeight())
     if self.showTicks then
-        print('starting with', #self.ticksContainer.ticks, 'ticks')
         -- reuse existing ticks when possible
-        for i = 1, #self.ticksContainer.ticks do
-            local tick = self.ticksContainer.ticks[i]
+        for i, tick in ipairs(self.ticksContainer.ticks) do
             -- can be reused
             if i <= maxCharges - 1 then
-                print('reusing tick', i, 'at', chargeWidth * i)
-                tick:SetTexture("Interface\\Buttons\\WHITE8X8")
-                tick:SetVertexColor(Util:UnpackRGBA(self.tickColor))
-                tick:SetSize(self.tickWidth, self.innerContainer:GetHeight())
+                tick:SetColorTexture(Util:UnpackRGBA(self.tickColor))
+                tick:SetSize(self.tickWidth, self.ticksContainer:GetHeight())
                 tick:SetPoint("CENTER", self.ticksContainer, "LEFT", chargeWidth * i, 0)
+                tick:SetShown(true)
             -- hide all ticks we don't need
             else
-                print('Resetting tick', i)
                 tick:SetToDefaults()
+                tick:SetShown(false)
             end
         end
 
         local newTicksNeeded = (maxCharges - 1) - #self.ticksContainer.ticks
-        print('need', newTicksNeeded, 'new ticks.')
         for i = #self.ticksContainer.ticks + 1, newTicksNeeded do
-            print('creating tick', i, 'at', chargeWidth * i)
-            local tick = self.ticksContainer:CreateTexture("Tick_"..i-1, "OVERLAY")
-            tick:SetTexture("Interface\\Buttons\\WHITE8X8")
-            tick:SetVertexColor(Util:UnpackRGBA(self.tickColor))
-            tick:SetSize(self.tickWidth, self.innerContainer:GetHeight())
-            tick:SetPoint("CENTER", self.innerContainer, "LEFT", chargeWidth * i, 0)
+            local tick = self.ticksContainer:CreateTexture(nil, "OVERLAY")
+            tick:SetColorTexture(Util:UnpackRGBA(self.tickColor))
+            tick:SetSize(self.tickWidth, self.ticksContainer:GetHeight())
+            tick:SetPoint("CENTER", self.ticksContainer, "LEFT", chargeWidth * i, 0)
             table.insert(self.ticksContainer.ticks, tick)
         end
     end
 end
 
 function ChargeBar:Disable()
+    self.frame:SetToDefaults()
     self.frame:SetShown(false)
+    self.enabled = false
 end
 
 function ChargeBar:LEMSetup()
@@ -146,33 +150,54 @@ function ChargeBar:LEMSetup()
 
     LEM:AddFrameSettings(self.frame, {
         {
+            name = 'Enabled',
+            kind = LEM.SettingType.Checkbox,
+            default = Data.defaultBarSettings.enabled,
+            get = function(layoutName)
+                return Data.db.profile.bars[1].enabled
+            end,
+            set = function(layoutName, value)
+                Data.db.profile.bars[1].enabled = value
+                self.reinitRequired = self.enabled ~= value
+                self.enabled = value
+            end,
+        },
+        {
             name = 'Bar Width',
             kind = LEM.SettingType.Slider,
             default = Data.defaultBarSettings.barWidth,
+            disabled = function()
+                return not self.enabled
+            end,
             get = function(layoutName)
                 return Data.db.profile.bars[1].barWidth
             end,
             set = function(layoutName, value)
                 Data.db.profile.bars[1].barWidth = value
-                self.reinitRequired = self.frame:GetWidth() ~= value
+                self.reinitRequired = self.reinitRequired or self.frame:GetWidth() ~= value
+                self.frame:SetWidth(value)
             end,
             minValue = 50,
-            maxValue = 1000,
+            maxValue = 500,
             valueStep = 1,
         },
         {
             name = 'Bar Height',
             kind = LEM.SettingType.Slider,
             default = Data.defaultBarSettings.barHeight,
+            disabled = function()
+                return not self.enabled
+            end,
             get = function(layoutName)
                 return Data.db.profile.bars[1].barHeight
             end,
             set = function(layoutName, value)
                 Data.db.profile.bars[1].barHeight = value
-                self.reinitRequired = self.frame:GetHeight() ~= value
+                self.reinitRequired = self.reinitRequired or self.frame:GetHeight() ~= value
+                self.frame:SetHeight(value)
             end,
-            minValue = 50,
-            maxValue = 1000,
+            minValue = 8,
+            maxValue = 100,
             valueStep = 1,
         },
         {
@@ -180,6 +205,9 @@ function ChargeBar:LEMSetup()
             description = 'Color of active charges.',
             kind = LEM.SettingType.ColorPicker,
             default = CreateColor(Util:UnpackRGBA(Data.defaultBarSettings.chargeColor)),
+            disabled = function()
+                return not self.enabled
+            end,
             hasOpacity = true,
             get = function(layoutName)
                 return CreateColor(Util:UnpackRGBA(Data.db.profile.bars[1].chargeColor))
@@ -198,6 +226,9 @@ function ChargeBar:LEMSetup()
             name = 'Border Width',
             kind = LEM.SettingType.Slider,
             default = Data.defaultBarSettings.borderWidth,
+            disabled = function()
+                return not self.enabled
+            end,
             get = function(layoutName)
                 return Data.db.profile.bars[1].borderWidth
             end,
@@ -212,6 +243,9 @@ function ChargeBar:LEMSetup()
             name = 'Border Color',
             kind = LEM.SettingType.ColorPicker,
             default = CreateColor(Util:UnpackRGBA(Data.defaultBarSettings.borderColor)),
+            disabled = function()
+                return not self.enabled
+            end,
             hasOpacity = true,
             get = function(layoutName)
                 return CreateColor(Util:UnpackRGBA(Data.db.profile.bars[1].borderColor))
@@ -227,22 +261,12 @@ function ChargeBar:LEMSetup()
             end,
         },
         {
-            -- TODO: Hook this up.
-            name = 'Enable Recharge Bar',
-            description = 'Displays a partial fill on the currently recharching charge',
-            kind = LEM.SettingType.Checkbox,
-            default = true, -- Data.defaultBarSettings.enableRechargeBar,
-            get = function(layoutName)
-                return true -- Data.db.profile.bars[1].enableRechargeBar
-            end,
-            set = function(layoutName, value)
-                -- Data.db.profile.bars[1].enableRechargeBar = value
-            end,
-        },
-        {
             name = 'Recharge Bar Color',
             kind = LEM.SettingType.ColorPicker,
             default = CreateColor(Util:UnpackRGBA(Data.defaultBarSettings.rechargeColor)),
+            disabled = function()
+                return not self.enabled
+            end,
             hasOpacity = true,
             get = function(layoutName)
                 return CreateColor(Util:UnpackRGBA(Data.db.profile.bars[1].rechargeColor))
@@ -254,13 +278,16 @@ function ChargeBar:LEMSetup()
                     b = value.b,
                     a = value.a
                 }
-                self.refreshCharge:SetVertexColor(value:GetRGBA())
+                self.refreshCharge:SetColorFill(value:GetRGBA())
             end,
         },
         {
             name = 'Show Recharge Cooldown Text',
             kind = LEM.SettingType.Checkbox,
             default = Data.defaultBarSettings.showRechargeText,
+            disabled = function()
+                return not self.enabled
+            end,
             get = function(layoutName)
                 return Data.db.profile.bars[1].showRechargeText
             end,
@@ -273,8 +300,11 @@ function ChargeBar:LEMSetup()
             name = 'Recharge Cooldown Text Size',
             kind = LEM.SettingType.Slider,
             default = Data.defaultBarSettings.rechargeTextFontSize,
+            disabled = function()
+                return not self.enabled
+            end,
             hidden = function()
-                return not Data.db.profile.bars[1].rechargeTextFontSize
+                return Data.db.profile.bars[1].rechargeTextFontSize < 1
             end,
             get = function(layoutName)
                 return Data.db.profile.bars[1].rechargeTextFontSize
@@ -292,12 +322,17 @@ function ChargeBar:LEMSetup()
             name = 'Tick Width',
             kind = LEM.SettingType.Slider,
             default = Data.defaultBarSettings.tickWidth,
+            disabled = function()
+                return not self.enabled
+            end,
             get = function(layoutName)
                 return Data.db.profile.bars[1].tickWidth
             end,
             set = function(layoutName, value)
                 Data.db.profile.bars[1].tickWidth = value
-                self.reinitRequired = self.tickWidth ~= value
+                if not self.reinitRequired then
+                    self.reinitRequired = self.tickWidth ~= value
+                end
                 self.tickWidth = value
             end,
             minValue = 0,
@@ -307,6 +342,9 @@ function ChargeBar:LEMSetup()
             name = 'Tick Color',
             kind = LEM.SettingType.ColorPicker,
             default = CreateColor(Util:UnpackRGBA(Data.defaultBarSettings.tickColor)),
+            disabled = function()
+                return not self.enabled
+            end,
             hasOpacity = true,
             get = function(layoutName)
                 return CreateColor(Util:UnpackRGBA(Data.db.profile.bars[1].tickColor))
@@ -335,11 +373,10 @@ function ChargeBar:HandleSpellUpdateCharges()
 end
 
 function ChargeBar:onPositionChanged(layoutName, point, x, y)
-    print(self.frame:GetName(), layoutName, 'onPositionChanged', x, y, point)
     Data.db.profile.bars[1].position = {
         point = point,
-        x = x,
-        y = y
+        x = floor(x),
+        y = floor(y)
     }
 end
 
