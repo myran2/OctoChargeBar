@@ -1,5 +1,6 @@
 ---@class ChargeBarSettings
----@field spellId number
+---@field enabled boolean
+---@field spellId number?
 ---@field barWidth number
 ---@field barHeight number
 ---@field borderWidth number

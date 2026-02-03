@@ -3,8 +3,6 @@ local addon = select(2, ...)
 
 local Data = addon.Data
 local ChargeBar = addon.ChargeBar
-local SlashCmd = addon.SlashCmd
-local Util = addon.Util
 
 local Core = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceEvent-3.0")
 addon.Core = Core
@@ -12,8 +10,6 @@ addon.Core = Core
 function Core:OnInitialize()
     Data:InitDB()
     Core.chargeBars = {}
-
-    EventRegistry:RegisterCallback(addonName..".AddBar", Core.AddNewBar)
 end
 
 function Core:OnEnable()
@@ -21,14 +17,14 @@ function Core:OnEnable()
     self:RegisterEvent("TRAIT_CONFIG_UPDATED")
     self:RegisterEvent("SPELL_UPDATE_CHARGES")
 
+    local specIndex = C_SpecializationInfo.GetSpecialization()
+    local specId = C_SpecializationInfo.GetSpecializationInfo(specIndex)
+    DevTools_Dump(specId)
+
     for i, barSettings in pairs(Data.db.profile.bars) do
         local chargeBar = ChargeBar:Init(barSettings)
         table.insert(Core.chargeBars, chargeBar)
     end
-
-    RegisterNewSlashCommand(function(msg, editBox)
-        SlashCmd:Handle(msg, editBox)
-    end, 'octochargebar', 'ocb')
 end
 
 function Core:OnDisable()
@@ -59,16 +55,5 @@ function Core:TRAIT_CONFIG_UPDATED(event, configId)
     for i, chargeBar in pairs(Core.chargeBars) do
         chargeBar:Setup()
         chargeBar:HandleSpellUpdateCharges()
-    end
-end
-
-function Core:AddNewBar(spellId)
-    print('AddNewBar', spellId)
-    local barSettings = Util:TableCopy(Data.defaultBarSettings)
-    barSettings.spellId = spellId
-    table.insert(Data.db.profile.bars, barSettings)
-    table.insert(Core.chargeBars, ChargeBar:Init(barSettings))
-    for i, chargeBar in pairs(Core.chargeBars) do
-        chargeBar:Setup()
     end
 end

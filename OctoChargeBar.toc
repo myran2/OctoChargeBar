@@ -14,5 +14,4 @@ Types.lua
 Util.lua
 Data.lua
 ChargeBar.lua
-SlashCmd.Lua
 Core.lua
