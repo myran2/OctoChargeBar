@@ -8,78 +8,81 @@ local Data = addon.Data
 local ChargeBar = {}
 addon.ChargeBar = ChargeBar
 
----@param settings ChargeBarSettings
-function ChargeBar:Init(settings)
+function ChargeBar:New()
     local newInstance = Util:TableCopy(Data.defaultBarSettings)
     setmetatable(newInstance, {__index = self})
+    return newInstance
+end
 
+---@param settings ChargeBarSettings
+function ChargeBar:Init(settings)
     if not C_SpellBook.IsSpellKnown(settings.spellId) then print(settings.spellId, 'not known!') return end
     local spellName = C_Spell.GetSpellName(settings.spellId)
     assert(spellName, string.format("No spell name found for %d.", settings.spellId))
 
     local frameName = string.format("%s: %s", addonName, spellName)
-    newInstance.spellId = settings.spellId
-    newInstance.showTicks = settings.showTicks
-    newInstance.tickColor = settings.tickColor
-    newInstance.tickWidth = settings.tickWidth
-    newInstance.enabled = settings.enabled
+    self.spellId = settings.spellId
+    self.showTicks = settings.showTicks
+    self.tickColor = settings.tickColor
+    self.tickWidth = settings.tickWidth
+    self.enabled = settings.enabled
 
-    newInstance.frame = newInstance.frame or CreateFrame("Frame", frameName, UIParent, "BackdropTemplate")
-    newInstance.frame:SetSize(settings.barWidth, settings.barHeight)
-    newInstance.frame:SetBackdrop({
+    self.frame = self.frame or CreateFrame("Frame", frameName, UIParent, "BackdropTemplate")
+    self.frame:SetSize(settings.barWidth, settings.barHeight)
+    self.frame:SetBackdrop({
         bgFile = "Interface\\Buttons\\WHITE8X8",
         edgeFile = "Interface\\Buttons\\WHITE8X8",
         edgeSize = settings.borderWidth,
         insets = {left = 0, right = 0, top = 0, bottom = 0}
     })
-    newInstance.frame:SetBackdropColor(0,0,0,0)
-    newInstance.frame:SetBackdropBorderColor(Util:UnpackRGBA(settings.borderColor))
-    newInstance.frame:SetSize(settings.barWidth, settings.barHeight)
-    newInstance.frame:SetPoint(settings.position.point, settings.position.x, settings.position.y)
+    self.frame:SetBackdropColor(0,0,0,0)
+    self.frame:SetBackdropBorderColor(Util:UnpackRGBA(settings.borderColor))
+    self.frame:SetSize(settings.barWidth, settings.barHeight)
+    self.frame:SetPoint(settings.position.point, settings.position.x, settings.position.y)
 
-    newInstance.innerContainer = newInstance.innerContainer or CreateFrame("Frame", "innerContainer", newInstance.frame)
-    newInstance.innerContainer:SetSize(settings.barWidth - (settings.borderWidth * 2), settings.barHeight - (settings.borderWidth * 2))
-    newInstance.innerContainer:SetPoint("CENTER", newInstance.frame, "CENTER", 0, 0)
-    newInstance.innerContainer:SetClipsChildren(true)
+    self.innerContainer = self.innerContainer or CreateFrame("Frame", "innerContainer", self.frame)
+    self.innerContainer:SetSize(settings.barWidth - (settings.borderWidth * 2), settings.barHeight - (settings.borderWidth * 2))
+    self.innerContainer:SetPoint("CENTER", self.frame, "CENTER", 0, 0)
+    self.innerContainer:SetClipsChildren(true)
 
-    newInstance.chargeFrame = newInstance.chargeFrame or CreateFrame("StatusBar", "ChargesBar", newInstance.innerContainer)
-    newInstance.chargeFrame:SetPoint("CENTER", newInstance.innerContainer, "CENTER", 0, 0)
-    newInstance.chargeFrame:SetSize(newInstance.innerContainer:GetWidth(), newInstance.innerContainer:GetHeight())
-    newInstance.chargeFrame:SetColorFill(Util:UnpackRGBA(settings.chargeColor))
+    self.chargeFrame = self.chargeFrame or CreateFrame("StatusBar", "ChargesBar", self.innerContainer)
+    self.chargeFrame:SetPoint("CENTER", self.innerContainer, "CENTER", 0, 0)
+    self.chargeFrame:SetSize(self.innerContainer:GetWidth(), self.innerContainer:GetHeight())
+    self.chargeFrame:SetColorFill(Util:UnpackRGBA(settings.chargeColor))
 
-    newInstance.refreshCharge = newInstance.refreshCharge or CreateFrame("StatusBar", "RefreshCharge", newInstance.innerContainer)
-    newInstance.refreshCharge:SetPoint("LEFT",newInstance.chargeFrame:GetStatusBarTexture(), "RIGHT", 0, 0)
-    newInstance.refreshCharge:SetColorFill(Util:UnpackRGBA(settings.rechargeColor))
+    self.refreshCharge = self.refreshCharge or CreateFrame("StatusBar", "RefreshCharge", self.innerContainer)
+    self.refreshCharge:SetPoint("LEFT",self.chargeFrame:GetStatusBarTexture(), "RIGHT", 0, 0)
+    self.refreshCharge:SetColorFill(Util:UnpackRGBA(settings.rechargeColor))
 
-    newInstance.refreshCharge.text = newInstance.refreshCharge.text or newInstance.refreshCharge:CreateFontString("RechargeTime", "OVERLAY")
+    self.refreshCharge.text = self.refreshCharge.text or self.refreshCharge:CreateFontString("RechargeTime", "OVERLAY")
     if settings.showRechargeText then
-        newInstance.refreshCharge.text:SetPoint("CENTER")
-        newInstance.refreshCharge.text:SetFont(settings.rechargeTextFont, settings.rechargeTextFontSize, "OUTLINE")
-        newInstance.refreshCharge:SetScript("OnUpdate", function()
-            if newInstance.refreshCharge:GetTimerDuration() then
-                local rechargeDuration = newInstance.refreshCharge:GetTimerDuration():GetRemainingDuration()
-                newInstance.refreshCharge.text:SetFormattedText("%.1f", rechargeDuration)
+        self.refreshCharge.text:SetPoint("CENTER")
+        self.refreshCharge.text:SetFont(settings.rechargeTextFont, settings.rechargeTextFontSize, "OUTLINE")
+        self.refreshCharge:SetScript("OnUpdate", function()
+            if self.refreshCharge:GetTimerDuration() then
+                local rechargeDuration = self.refreshCharge:GetTimerDuration():GetRemainingDuration()
+                self.refreshCharge.text:SetFormattedText("%.1f", rechargeDuration)
             else
-                newInstance.refreshCharge.text:SetText("")
+                self.refreshCharge.text:SetText("")
             end
         end)
     else
-        newInstance.refreshCharge.text:SetToDefaults()
+        self.refreshCharge.text:SetToDefaults()
     end
 
-    newInstance.ticksContainer = newInstance.ticksContainer or CreateFrame("Frame", "TicksContainer", newInstance.innerContainer)
-    newInstance.ticksContainer:SetPoint("CENTER")
-    newInstance.ticksContainer:SetSize(newInstance.innerContainer:GetWidth(), newInstance.innerContainer:GetHeight())
-    newInstance.ticksContainer.ticks = newInstance.ticksContainer.ticks or {}
+    self.ticksContainer = self.ticksContainer or CreateFrame("Frame", "TicksContainer", self.innerContainer)
+    self.ticksContainer:SetPoint("CENTER")
+    self.ticksContainer:SetSize(self.innerContainer:GetWidth(), self.innerContainer:GetHeight())
+    self.ticksContainer.ticks = self.ticksContainer.ticks or {}
 
-    newInstance:LEMSetup()
-    newInstance:SetupCharges()
+    self:LEMSetup()
+    self:SetupCharges()
 
-    if not newInstance.enabled then
-        newInstance:Hide()
+    if not self.enabled then
+        self:Hide()
     end
 
-    return newInstance
+    return self
 end
 
 -- Sets up bars based on max charges.
@@ -131,6 +134,7 @@ end
 
 function ChargeBar:Hide()
     self.frame:Hide()
+    self.enabled = false
 end
 
 function ChargeBar:Show()
@@ -353,6 +357,9 @@ function ChargeBar:LEMSetup()
 end
 
 function ChargeBar:HandleSpellUpdateCharges()
+    if not self.enabled then
+        return
+    end
     self.chargeFrame:SetValue(C_Spell.GetSpellCharges(self.spellId).currentCharges)
     self.refreshCharge:SetTimerDuration(
         C_Spell.GetSpellChargeDuration(self.spellId),

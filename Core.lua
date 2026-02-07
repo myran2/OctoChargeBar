@@ -61,6 +61,11 @@ function Core:TRAIT_CONFIG_UPDATED(event, configId)
 end
 
 function Core:SetupBars(layoutName)
+    -- If we're switching layouts, we need to hide bars from the old layout.
+    for spellId, chargeBar in pairs(Core.chargeBars) do
+        chargeBar:Hide()
+    end
+
     local specId = Util:GetActiveSpecId()
 
     Data.db.global[layoutName] = Data.db.global[layoutName] or {}
@@ -79,9 +84,9 @@ function Core:SetupBars(layoutName)
     end
 
     -- setup bars from SV
-    for _, barSettings in pairs(specBarSettings) do
-        local chargeBar = ChargeBar:Init(barSettings)
-        Core.chargeBars[chargeBar.spellId] = chargeBar
+    for spellId, barSettings in pairs(specBarSettings) do
+        local chargeBar = ChargeBar:New()
+        Core.chargeBars[spellId] = chargeBar:Init(barSettings)
     end
 end
 
