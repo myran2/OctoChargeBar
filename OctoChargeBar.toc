@@ -1,6 +1,9 @@
-## Interface: 120000
+## Interface: 120000, 120001
 ## Title: OctoChargeBar
 ## SavedVariables: OctoChargeBarDB
+## Notes: Represent cooldowns of charge-based spells with a bar
+## Version: @project-version@
+## Author: Thejigglr-BleedingHollow-NA
 
 # Libraries
 lib\LibStub\LibStub.lua

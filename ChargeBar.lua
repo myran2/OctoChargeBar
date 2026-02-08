@@ -51,22 +51,26 @@ function ChargeBar:ApplySettings(settings)
     })
     self.frame:SetBackdropColor(0,0,0,0)
     self.frame:SetBackdropBorderColor(Util:UnpackRGBA(settings.borderColor))
-    self.frame:SetSize(settings.barWidth, settings.barHeight)
+    PixelUtil.SetWidth(self.frame, settings.barWidth)
+    PixelUtil.SetHeight(self.frame, settings.barHeight)
     self.frame:SetPoint(settings.position.point, settings.position.x, settings.position.y)
     self.frame:SetShown(settings.enabled)
 
     self.innerContainer = self.innerContainer or CreateFrame("Frame", "innerContainer", self.frame)
-    self.innerContainer:SetSize(settings.barWidth - (settings.borderWidth * 2), settings.barHeight - (settings.borderWidth * 2))
-    self.innerContainer:SetPoint("CENTER", self.frame, "CENTER", 0, 0)
+    PixelUtil.SetWidth(self.innerContainer, settings.barWidth - (settings.borderWidth * 2))
+    PixelUtil.SetHeight(self.innerContainer, settings.barHeight - (settings.borderWidth * 2))
+    PixelUtil.SetPoint(self.innerContainer, "CENTER", self.frame, "CENTER", 0, 0)
     self.innerContainer:SetClipsChildren(true)
 
     self.chargeFrame = self.chargeFrame or CreateFrame("StatusBar", "ChargesBar", self.innerContainer)
-    self.chargeFrame:SetPoint("CENTER", self.innerContainer, "CENTER", 0, 0)
-    self.chargeFrame:SetSize(self.innerContainer:GetWidth(), self.innerContainer:GetHeight())
+    PixelUtil.SetWidth(self.chargeFrame, self.innerContainer:GetWidth())
+    PixelUtil.SetHeight(self.chargeFrame, self.innerContainer:GetHeight())
+    PixelUtil.SetPoint(self.chargeFrame, "CENTER", self.innerContainer, "CENTER", 0, 0)
     self.chargeFrame:SetColorFill(Util:UnpackRGBA(settings.chargeColor))
 
     self.refreshCharge = self.refreshCharge or CreateFrame("StatusBar", "RefreshCharge", self.innerContainer)
-    self.refreshCharge:SetPoint("LEFT",self.chargeFrame:GetStatusBarTexture(), "RIGHT", 0, 0)
+    -- self.refreshCharge:SetPoint("LEFT",self.chargeFrame:GetStatusBarTexture(), "RIGHT", 0, 0)
+    PixelUtil.SetPoint(self.refreshCharge, "LEFT",self.chargeFrame:GetStatusBarTexture(), "RIGHT", 0, 0)
     self.refreshCharge:SetColorFill(Util:UnpackRGBA(settings.rechargeColor))
 
     self.refreshCharge.text = self.refreshCharge.text or self.refreshCharge:CreateFontString("RechargeTime", "OVERLAY")
@@ -87,7 +91,8 @@ function ChargeBar:ApplySettings(settings)
 
     self.ticksContainer = self.ticksContainer or CreateFrame("Frame", "TicksContainer", self.innerContainer)
     self.ticksContainer:SetPoint("CENTER")
-    self.ticksContainer:SetSize(self.innerContainer:GetWidth(), self.innerContainer:GetHeight())
+    PixelUtil.SetWidth(self.ticksContainer, self.innerContainer:GetWidth())
+    PixelUtil.SetHeight(self.ticksContainer, self.innerContainer:GetHeight())
     self.ticksContainer.ticks = self.ticksContainer.ticks or {}
 
     if initialSetup then
@@ -142,6 +147,8 @@ function ChargeBar:SetupCharges()
             tick:SetColorTexture(Util:UnpackRGBA(self.tickColor))
             tick:SetSize(self.tickWidth, self.ticksContainer:GetHeight())
             tick:SetPoint("CENTER", self.ticksContainer, "LEFT", chargeWidth * i, 0)
+            tick:SetTexelSnappingBias(0)
+            tick:SetSnapToPixelGrid(false)
             table.insert(self.ticksContainer.ticks, tick)
         end
     end
@@ -159,7 +166,6 @@ end
 function ChargeBar:LEMSetup()
     -- TODO: Figure out what the default position values should be.
     LEM:AddFrame(self.frame, function(frame, layoutName, point, x, y)
-        print(frame:GetName(), layoutName, point, x, y)
         self:onPositionChanged(layoutName, point, x, y)
     end, {point = 'CENTER', x = 0, y = 0})
 
@@ -384,10 +390,9 @@ function ChargeBar:HandleSpellUpdateCharges()
 end
 
 function ChargeBar:onPositionChanged(layoutName, point, x, y)
-    -- print(string.format("onPositionChanged('%s', %d): %s (%d, %y)", layoutName, self.spellId, point, x, y))
     Data:SetBarSetting(layoutName, self.spellId, 'position', {
         point = point,
-        x = floor(x),
-        y = floor(y)
+        x = x,
+        y = y
     })
 end
