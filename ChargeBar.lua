@@ -123,11 +123,6 @@ function ChargeBar:SetupCharges()
     if not chargeInfo then return end
 
     local maxCharges = chargeInfo.maxCharges
-    -- Disable bar if the spell's max charges is one
-    if maxCharges == 1 then
-        self:Hide() 
-        return
-    end
     local currentCharges = chargeInfo.currentCharges
     local chargeWidth = self.innerContainer:GetWidth() / maxCharges
     self.chargeFrame:SetMinMaxValues(0, maxCharges)
