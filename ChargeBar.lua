@@ -24,8 +24,6 @@ end
 
 ---@param settings ChargeBarSettings
 function ChargeBar:ApplySettings(settings)
-    assert(C_SpellBook.IsSpellKnown(settings.spellId), settings.spellId .. " not known!")
-
     local spellName = C_Spell.GetSpellName(settings.spellId)
     assert(spellName, string.format("No spell name found for %d.", settings.spellId))
 
@@ -97,6 +95,12 @@ function ChargeBar:ApplySettings(settings)
 
     if initialSetup then
         self:LEMSetup()
+    end
+
+    -- Disable the bar if we don't know the spell it tracks
+    if not C_SpellBook.IsSpellKnown(settings.spellId) then
+        self:Hide()
+        return self
     end
 
     self:SetupCharges()
