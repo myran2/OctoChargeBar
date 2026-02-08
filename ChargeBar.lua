@@ -314,7 +314,8 @@ function ChargeBar:LEMSetup()
             end,
         },
         {
-            name = 'Recharge Cooldown Text Size',
+            name = 'Cooldown Text Size',
+            description = 'Recharge Cooldown Text Size',
             kind = LEM.SettingType.Slider,
             default = Data.defaultBarSettings.rechargeTextFontSize,
             disabled = function(layoutName)

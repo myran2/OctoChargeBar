@@ -91,7 +91,9 @@ Data.defaultTrackedSpellsBySpec = {
     [62] = {},
 
     -- Mage: Fire
-    [63] = {},
+    [63] = {
+        108853, -- Fire Blast
+    },
 
     -- Mage: Frost
     [64] = {},
