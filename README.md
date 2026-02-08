@@ -4,6 +4,11 @@ An addon to display charges of an important spell as a bar. Everything works in 
 ### Example - Riptide
 ![A chargebar of the Riptide spell. The bar changes as charges are used.](./Images/example.gif)
 ## Spells Currently Tracked
+* Blood Death Knight
+  * Blood Boil
+  * Death and Decay
+* Frost Death Knight
+  * Empower Rune Weapon
 * Balance Druid
   * Eclipse
     * Tracking Solar Eclipse (1233346) should also track Lunar Eclipse (1233272).

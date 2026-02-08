@@ -33,10 +33,15 @@ Data.defaultBarSettings = {
 
 Data.defaultTrackedSpellsBySpec = {
     -- Death Knight: Blood
-    [250] = {},
+    [250] = {
+        50842, -- Blood boil
+        43265 -- Death and Decay
+    },
 
     -- Death Knight: Frost
-    [251] = {},
+    [251] = {
+        47568 -- Empower rune weapon
+    },
 
     -- Death Knight: Unholy
     [252] = {},
