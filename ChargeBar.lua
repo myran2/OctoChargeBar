@@ -51,7 +51,7 @@ function ChargeBar:ApplySettings(settings)
     self.frame:SetBackdropBorderColor(Util:UnpackRGBA(settings.borderColor))
     PixelUtil.SetWidth(self.frame, settings.barWidth)
     PixelUtil.SetHeight(self.frame, settings.barHeight)
-    self.frame:SetPoint(settings.position.point, settings.position.x, settings.position.y)
+    PixelUtil.SetPoint(self.frame, "CENTER", UIParent, settings.position.point, settings.position.x, settings.position.y)
     self.frame:SetShown(settings.enabled)
 
     self.innerContainer = self.innerContainer or CreateFrame("Frame", "innerContainer", self.frame)
@@ -67,13 +67,12 @@ function ChargeBar:ApplySettings(settings)
     self.chargeFrame:SetColorFill(Util:UnpackRGBA(settings.chargeColor))
 
     self.refreshCharge = self.refreshCharge or CreateFrame("StatusBar", "RefreshCharge", self.innerContainer)
-    -- self.refreshCharge:SetPoint("LEFT",self.chargeFrame:GetStatusBarTexture(), "RIGHT", 0, 0)
     PixelUtil.SetPoint(self.refreshCharge, "LEFT",self.chargeFrame:GetStatusBarTexture(), "RIGHT", 0, 0)
     self.refreshCharge:SetColorFill(Util:UnpackRGBA(settings.rechargeColor))
 
     self.refreshCharge.text = self.refreshCharge.text or self.refreshCharge:CreateFontString("RechargeTime", "OVERLAY")
     if settings.showRechargeText then
-        self.refreshCharge.text:SetPoint("CENTER")
+        PixelUtil.SetPoint(self.refreshCharge.text, "CENTER", self.refreshCharge, "CENTER", 0, 0)
         self.refreshCharge.text:SetFont(settings.rechargeTextFont, settings.rechargeTextFontSize, "OUTLINE")
         self.refreshCharge:SetScript("OnUpdate", function()
             if self.refreshCharge:GetTimerDuration() then
@@ -88,7 +87,7 @@ function ChargeBar:ApplySettings(settings)
     end
 
     self.ticksContainer = self.ticksContainer or CreateFrame("Frame", "TicksContainer", self.innerContainer)
-    self.ticksContainer:SetPoint("CENTER")
+    PixelUtil.SetPoint(self.ticksContainer, "CENTER", self.innerContainer, "CENTER", 0, 0)
     PixelUtil.SetWidth(self.ticksContainer, self.innerContainer:GetWidth())
     PixelUtil.SetHeight(self.ticksContainer, self.innerContainer:GetHeight())
     self.ticksContainer.ticks = self.ticksContainer.ticks or {}
