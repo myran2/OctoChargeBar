@@ -4,9 +4,9 @@ local addon = select(2, ...)
 local Data = addon.Data
 local ChargeBar = addon.ChargeBar
 local Util = addon.Util
-local LEM = LibStub('LibEditMode')
+local LEM = addon.LibEditMode
 
-local Core = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceEvent-3.0")
+local Core = LibStub('AceAddon-3.0'):NewAddon(addonName, 'AceEvent-3.0')
 addon.Core = Core
 
 function Core:OnInitialize()
@@ -15,8 +15,8 @@ function Core:OnInitialize()
 end
 
 function Core:OnEnable()
-    self:RegisterEvent("TRAIT_CONFIG_UPDATED")
-    self:RegisterEvent("SPELL_UPDATE_CHARGES")
+    self:RegisterEvent('TRAIT_CONFIG_UPDATED')
+    self:RegisterEvent('SPELL_UPDATE_CHARGES')
 
     LEM:RegisterCallback('enter', function()
         self:onEnterEditMode()

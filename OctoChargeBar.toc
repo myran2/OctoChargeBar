@@ -7,10 +7,11 @@
 
 # Libraries
 lib\LibStub\LibStub.lua
-lib\LibEditMode\embed.xml
 lib\AceAddon-3.0\AceAddon-3.0.xml
 lib\AceEvent-3.0\AceEvent-3.0.xml
 lib\AceDB-3.0\AceDB-3.0.xml
+lib\LibEditMode\namespaced.lua
+lib\LibEditMode\embed.xml
 
 # Main Files
 Types.lua

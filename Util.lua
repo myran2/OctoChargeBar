@@ -1,7 +1,7 @@
 local addonName = select(1, ...)
 local addon = select(2, ...)
 
-local LEM = LibStub('LibEditMode')
+local LEM = addon.LibEditMode
 
 local Util = {}
 addon.Util = Util
