@@ -5,8 +5,8 @@ local Data = {}
 addon.Data = Data
 
 local Util = addon.Util
+local LEM = addon.LibEditMode
 local AceDB = LibStub('AceDB-3.0')
-local LEM = LibStub('LibEditMode')
 
 ---@type ChargeBarSettings
 Data.defaultBarSettings = {
