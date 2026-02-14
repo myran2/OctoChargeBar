@@ -49,19 +49,25 @@ function ChargeBar:ApplySettings(settings)
 
     LPP.PSize(self.frame, settings[Settings.keys.Width], settings[Settings.keys.Height])
     self.frame:SetPoint("CENTER", UIParent, settings[Settings.keys.Position].point, settings[Settings.keys.Position].x, settings[Settings.keys.Position].y)
-    self.frame:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8X8",
-        edgeFile = "Interface\\Buttons\\WHITE8X8",
-        edgeSize = settings[Settings.keys.BorderWidth],
-        insets = {left = 0, right = 0, top = 0, bottom = 0}
-    })
-    self.frame:SetBackdropColor(0,0,0,0)
-    self.frame:SetBackdropBorderColor(unpack(settings[Settings.keys.BorderColor]))
+
+    local borderWidth = settings[Settings.keys.BorderWidth]
+    if borderWidth > 0 then
+        self.frame:SetBackdrop({
+            bgFile = "Interface\\Buttons\\WHITE8X8",
+            edgeFile = "Interface\\Buttons\\WHITE8X8",
+            edgeSize = borderWidth,
+            insets = {left = 0, right = 0, top = 0, bottom = 0}
+        })
+        self.frame:SetBackdropColor(0,0,0,0)
+        self.frame:SetBackdropBorderColor(unpack(settings[Settings.keys.BorderColor]))
+    else
+        self.frame:SetBackdrop({})
+    end
     self.frame:SetShown(settings[Settings.keys.Enabled])
 
     self.innerContainer = self.innerContainer or CreateFrame("Frame", "innerContainer", self.frame)
-    LPP.PWidth(self.innerContainer, self.frame:GetWidth() - (settings[Settings.keys.BorderWidth] * 2))
-    LPP.PHeight(self.innerContainer, self.frame:GetHeight() - (settings[Settings.keys.BorderWidth] * 2))
+    LPP.PWidth(self.innerContainer, self.frame:GetWidth() - (borderWidth * 2))
+    LPP.PHeight(self.innerContainer, self.frame:GetHeight() - (borderWidth * 2))
     self.innerContainer:SetPoint("CENTER", self.frame, "CENTER")
     self.innerContainer:SetClipsChildren(true)
 
