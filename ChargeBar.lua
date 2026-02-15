@@ -181,7 +181,7 @@ end
 function ChargeBar:LEMSetup()
     LEM:AddFrame(self.frame, function(frame, layoutName, point, x, y)
         self:onPositionChanged(layoutName, point, x, y)
-    end, Settings:GetDefaultEditModeFramePosition())
+    end, Settings.GetDefaultEditModeFramePosition())
 
     local lemSettings = {}
     for _, key in ipairs(Settings.GetSettingsDisplayOrder()) do
@@ -219,7 +219,7 @@ function ChargeBar:HandleSpellUpdateCharges()
 end
 
 function ChargeBar:onPositionChanged(layoutName, point, x, y)
-    Settings:Set(layoutName, self.spellId, Settings.keys.Position, {
+    Settings.Set(layoutName, self.spellId, Settings.keys.Position, {
         point = point,
         x = x,
         y = y

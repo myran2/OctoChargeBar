@@ -69,7 +69,7 @@ function Core:SetupBars(layoutName)
     -- pull default spells and add to SV if missing for this spec.
     for _, spellId in pairs(Data.defaultTrackedSpellsBySpec[specId]) do
         if not specBarSettings[spellId] then
-            local settingsObj = Settings:CreateBarSettingsObjectFromDefaults(spellId)
+            local settingsObj = Settings.CreateBarSettingsObjectFromDefaults(spellId)
             specBarSettings[spellId] = settingsObj
         end
     end
