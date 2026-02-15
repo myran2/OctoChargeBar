@@ -12,25 +12,47 @@ Data.defaultTrackedSpellsBySpec = {
     -- Death Knight: Blood
     [250] = {
         50842, -- Blood boil
-        43265 -- Death and Decay
+        43265, -- Death and Decay
+        48265, -- Death's Advance
+        49576 -- Death Grip
     },
 
     -- Death Knight: Frost
     [251] = {
-        47568 -- Empower rune weapon
+        47568, -- Empower rune weapon
+        43265, -- Death and Decay
+        48265, -- Death's Advance
+        49576 -- Death Grip
     },
 
     -- Death Knight: Unholy
-    [252] = {},
+    [252] = {
+        1247378, -- Putrefy
+        43265, -- Death and Decay
+        48265, -- Death's Advance
+        49576 -- Death Grip
+    },
 
     -- Demon Hunter: Havoc
-    [577] = {},
+    [577] = {
+        195072, -- Fel Rush
+        258920 -- Immolation Aura
+    },
 
     -- Demon Hunter: Vengeance
-    [581] = {},
+    [581] = {
+        189110, -- Infernal Strike
+        204157, -- Throw Glaive
+        263642, -- Fracture
+        204021, -- Fiery Brand
+    },
 
     -- Demon Hunter: Devourer
-    [1480] = {},
+    [1480] = {
+        1226019, -- Reap
+        1234796, -- Shift
+        198589 -- Blur
+    },
 
     -- Druid: Balance
     [102] = {
@@ -42,7 +64,10 @@ Data.defaultTrackedSpellsBySpec = {
     [103] = {},
 
     -- Druid: Guardian
-    [104] = {},
+    [104] = {
+        61336, -- Survival Instincts
+        22842 -- Frenzied Regeneration
+    },
 
     -- Druid: Restoration
     [105] = {},
@@ -119,31 +144,64 @@ Data.defaultTrackedSpellsBySpec = {
     },
 
     -- Paladin: Holy
-    [65] = {},
+    [65] = {
+        20473, -- Holy Shock
+        190784 -- Divine Steed
+    },
 
     -- Paladin: Protection
-    [66] = {},
+    [66] = {
+        275779, -- Judgment
+        204019, -- Blessed Hammer
+        53595, -- Hammer of the Righteous
+        190784 -- Divine Steed
+    },
 
     -- Paladin: Retribution
-    [70] = {},
+    [70] = {
+        20271, -- Judgment
+        190784 -- Divine Steed
+    },
 
     -- Priest: Discipline
-    [256] = {},
+    [256] = {
+        194509, -- Power Word: Radiance
+        121536 -- Angelic Feather
+    },
 
     -- Priest: Holy
-    [257] = {},
+    [257] = {
+        2050, -- Holy Word: Serenity
+        121536 -- Angelic Feather
+    },
 
     -- Priest: Shadow
-    [258] = {},
+    [258] = {
+        8092, -- Mind Blast
+        1227280, -- Tentacle Slam
+        121536 -- Angelic Feather
+    },
 
     -- Rogue: Assassination
-    [259] = {},
+    [259] = {
+        1966, -- Feint
+        381623, -- Thistle Tea
+    },
 
     -- Rogue: Outlaw
-    [260] = {},
+    [260] = {
+        195457, -- Grappling Hook
+        381623, -- Thistle Tea
+        1966 -- Feint
+    },
 
     -- Rogue: Subtlety
-    [261] = {},
+    [261] = {
+        1966, -- Feint,
+        36554, -- Shadowstep
+        185313, -- Shadow Dance
+        381623 -- Thistle Tea
+    },
 
     -- Shaman: Elemental
     [262] = {
@@ -151,7 +209,9 @@ Data.defaultTrackedSpellsBySpec = {
     },
 
     -- Shaman: Enhancement
-    [263] = {},
+    [263] = {
+        17364 -- Stormstrike
+    },
 
     -- Shaman: Restoration
     [264] = {
@@ -167,17 +227,26 @@ Data.defaultTrackedSpellsBySpec = {
 
     -- Warlock: Destruction
     [267] = {
-        17962, -- Conflaguration
+        17962, -- Conflagration
     },
 
     -- Warrior: Arms
-    [71] = {},
+    [71] = {
+        100, -- Charge
+        7384 -- Overpower
+    },
 
     -- Warrior: Fury
-    [72] = {},
+    [72] = {
+        100, -- Charge
+        85288 -- Raging Blow
+    },
 
     -- Warrior: Protection
-    [73] = {},
+    [73] = {
+        100, -- Charge
+        2565 -- Shield Block
+    },
 }
 
 Data.defaultSpellColors = {
