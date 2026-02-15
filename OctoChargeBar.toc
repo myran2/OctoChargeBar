@@ -4,6 +4,7 @@
 ## Notes: Represent cooldowns of charge-based spells with a bar
 ## Version: @project-version@
 ## IconTexture: Interface\AddOns\OctoChargeBar\Media\Icon.blp
+## X-Curse-Project-ID: 1462649
 
 # Libraries
 lib\LibStub\LibStub.lua
