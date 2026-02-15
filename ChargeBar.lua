@@ -33,6 +33,7 @@ function ChargeBar:ApplySettings(settings)
     self.showTicks = self.tickWidth > 0
     self.tickColor = settings[Settings.keys.TickColor]
     self.enabled = settings[Settings.keys.Enabled]
+    self.texture = settings[Settings.keys.Texture]
 
     local initialSetup = false
 
@@ -45,6 +46,17 @@ function ChargeBar:ApplySettings(settings)
                 self:onSettingChanged(layoutName, key, value)
             end
         end)
+    end
+
+    if self.texture then
+        self.frame:Raise()
+        self.frame.texture = self.frame:CreateTexture("ChargeBarTexture", "OVERLAY")
+        self.frame.texture:SetAllPoints(self.frame)
+        self.frame.texture:SetTexture(self.texture)
+    else
+        if self.frame.texture then
+            self.frame.texture:SetToDefaults()
+        end
     end
 
     LPP.PSize(self.frame, settings[Settings.keys.Width], settings[Settings.keys.Height])

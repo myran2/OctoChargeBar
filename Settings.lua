@@ -14,6 +14,7 @@ Settings.keys = {
     Width = "WIDTH",
     Height = "HEIGHT",
     Color = "COLOR",
+    Texture = "TEXTURE",
     BorderWidth = "BORDER_WIDTH",
     BorderColor = "BORDER_COLOR",
     RechargeColor = "RECHARGE_COLOR",
@@ -58,10 +59,36 @@ Settings.defaultValues = {
     [Settings.keys.Color] = {
         name = 'Charge Color',
         kind = LEM.SettingType.ColorPicker,
-        -- Default color can be overriden for specific spells in Data.defaultTrackedSpellsBySpec.
+        -- Default color can be overriden for specific spells in Data.defaultSpellColors.
         -- This is the fallback if a color isn't defined there.
         default = {0, 1, 0, 1},
         hasOpacity = true,
+    },
+    [Settings.keys.Texture] = {
+        name = 'Bar Texture',
+        kind = LEM.SettingType.Dropdown,
+        default = '',
+        generator = function(owner, rootDescription, data)
+            local statusBarTextureInfo = addon.Settings.GetStatusBarTextureOptions()
+
+            for index, label in pairs(statusBarTextureInfo.textures) do
+                local path = statusBarTextureInfo.byLabel[label]
+                local function IsEnabled()
+                    return data.get(LEM:GetActiveLayoutName()) == path
+                end
+
+                local function SetProxy()
+                    return data.set(LEM:GetActiveLayoutName(), path)
+                end
+
+                local radio = rootDescription:CreateRadio(label, IsEnabled, SetProxy)
+                radio:AddInitializer(function(button, elementDescription, menu)
+                    local texture = button:AttachTexture()
+                    texture:SetAllPoints(button)
+                    texture:SetTexture(path)
+                end)
+            end
+        end
     },
     [Settings.keys.BorderWidth] = {
         name = 'Border Width',
@@ -115,10 +142,10 @@ Settings.defaultValues = {
                 end
 
                 local radio = rootDescription:CreateRadio(label, IsEnabled, SetProxy)
-				radio:AddInitializer(function(button, elementDescription, menu)
-					local globalName = Settings.CreateAndGetFontIfNeeded(path, label)
-					button.fontString:SetFontObject(globalName)
-				end)
+                radio:AddInitializer(function(button, elementDescription, menu)
+                    local globalName = Settings.CreateAndGetFontIfNeeded(path, label)
+                    button.fontString:SetFontObject(globalName)
+                end)
             end
         end
     },
@@ -148,6 +175,7 @@ function Settings.GetSettingsDisplayOrder()
         Settings.keys.Width,
         Settings.keys.Height,
         Settings.keys.Color,
+        -- Settings.keys.Texture,
         Settings.keys.BorderWidth,
         Settings.keys.BorderColor,
         Settings.keys.RechargeColor,
@@ -272,4 +300,15 @@ function Settings.CreateAndGetFontIfNeeded(path, label)
     end
 
     return globalName
+end
+
+function Settings.GetStatusBarTextureOptions()
+    local textures = CopyTable(LibSharedMedia:List(LibSharedMedia.MediaType.STATUSBAR))
+    table.sort(textures)
+    local byLabel = LibSharedMedia:HashTable(LibSharedMedia.MediaType.STATUSBAR)
+
+    return {
+        textures = textures,
+        byLabel = byLabel,
+    }
 end
