@@ -177,7 +177,9 @@ Data.defaultTrackedSpellsBySpec = {
     [72] = {},
 
     -- Warrior: Protection
-    [73] = {},
+    [73] = {
+        2565, -- Shield Block
+    },
 }
 
 Data.defaultSpellColors = {

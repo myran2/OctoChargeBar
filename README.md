@@ -55,6 +55,8 @@ An addon to display charges of an important spell as a bar. Everything works in 
   * Lava Burst
 * Destruction Warlock
   * Conflaguration
+* Protection Warrior
+  * Shield Block
 ## Configuration
 All configuration happens in edit mode. Each bar for your spec will be enabled by default. You can turn off whatever you don't want and tweak whatever you do.
 
