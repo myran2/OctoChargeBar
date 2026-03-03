@@ -61,6 +61,7 @@ function Core:SetupBars(layoutName)
 
     local specId = Util:GetActiveSpecId()
 
+    Data.db.global["cache"] = Data.db.global["cache"] or {}
     Data.db.global[layoutName] = Data.db.global[layoutName] or {}
     Data.db.global[layoutName][specId] = Data.db.global[layoutName][specId] or {specBars = {}}
 

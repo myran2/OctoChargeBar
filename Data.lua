@@ -207,3 +207,11 @@ function Data:GetActiveLayoutBarSettings(spellId)
     local layoutName = LEM:GetActiveLayoutName()
     return self:GetLayoutBarSettings(layoutName, spellId)
 end
+
+function Data:GetCachedSpellMaxCharges(spellId)
+    return Data.db.global["cache"][spellId] or nil
+end
+
+function Data:SetCachedSpellMaxCharges(spellId, maxCharges)
+    Data.db.global["cache"][spellId] = maxCharges
+end

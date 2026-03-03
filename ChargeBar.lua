@@ -125,7 +125,7 @@ function ChargeBar:ApplySettings(settings)
 end
 
 -- Sets up bars based on max charges.
--- Can't be called while Secret restrictions are active!
+-- If combat lockdown is active, the most recent, non-secret maxCharges value will be used instead.
 function ChargeBar:SetupCharges()
     if not self.enabled then
         print('ChargeBar:SetupCharges:', self.spellId, 'not enabled.')
@@ -149,6 +149,17 @@ function ChargeBar:SetupCharges()
         tick:SetShown(false)
     end
     self.ticksContainer.ticks = {}
+
+    if not issecretvalue(maxCharges) then
+        -- cache non-secret max charges value so we can fall back to it if we need it during combat lockdown.
+        -- (like after a /reload in a m+)
+        Data:SetCachedSpellMaxCharges(self.spellId, maxCharges)
+    else
+        local cachedMaxCharges = Data:GetCachedSpellMaxCharges(self.spellId)
+        if cachedMaxCharges then
+            maxCharges = cachedMaxCharges
+        end
+    end
 
     if not issecretvalue(maxCharges) then
         local chargeWidth = self.innerContainer:GetWidth() / maxCharges
