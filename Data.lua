@@ -119,7 +119,9 @@ Data.defaultTrackedSpellsBySpec = {
     },
 
     -- Paladin: Holy
-    [65] = {},
+    [65] = {
+        20473, -- Holy Shock
+    },
 
     -- Paladin: Protection
     [66] = {},
