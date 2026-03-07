@@ -251,12 +251,12 @@ Settings.defaultValues = {
 function Settings.GetSettingsDisplayOrder()
     return {
         Settings.keys.Enabled,
-        Settings.keys.AnchorFrame,
-        Settings.keys.AnchorFrameInheritWidth,
-        Settings.keys.AnchorFrameOffsetX,
-        Settings.keys.AnchorFrameOffsetY,
-        Settings.keys.AnchorFrameTo,
-        Settings.keys.AnchorFrameFrom ,
+        -- Settings.keys.AnchorFrame,
+        -- Settings.keys.AnchorFrameInheritWidth,
+        -- Settings.keys.AnchorFrameOffsetX,
+        -- Settings.keys.AnchorFrameOffsetY,
+        -- Settings.keys.AnchorFrameTo,
+        -- Settings.keys.AnchorFrameFrom ,
         Settings.keys.Width,
         Settings.keys.Height,
         Settings.keys.Color,
