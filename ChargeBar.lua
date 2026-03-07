@@ -264,4 +264,5 @@ end
 function ChargeBar:onSettingChanged(layoutName, key, value)
     local settings = Data:GetLayoutBarSettings(layoutName, self.spellId)
     self:ApplySettings(settings)
+    LEM:RefreshFrameSettings(self.frame)
 end

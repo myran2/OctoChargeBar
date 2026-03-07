@@ -32,7 +32,15 @@ Settings.keys = {
 }
 
 Settings.FrameAnchors = {
-    ["UIParent"] = "Manual",
+    ["UIParent"] = "|cFF00AEF7Blizzard|r: UIParent (Do Not Anchor)",
+    ["PlayerFrame"] = "|cFF00AEF7Blizzard|r: Player Frame",
+    ["TargetFrame"] = "|cFF00AEF7Blizzard|r: Target Frame",
+    ["BCDM_PowerBar"] = "|cFF8080FFBCDM|r: Power Bar",
+    ["BCDM_SecondaryPowerBar"] = "|cFF8080FFBCDM|r: Secondary Power Bar",
+    ["BCDM_CustomCooldownViewer"] = "|cFF8080FFBCDM|r: Custom Bar",
+    ["BCDM_AdditionalCustomCooldownViewer"] = "|cFF8080FFBCDM|r: Additional Custom Bar",
+    ["BCDM_CustomItemSpellBar"] = "|cFF8080FFBCDM|r: Items/Spells Bar",
+    ["BCDM_TrinketBar"] = "|cFF8080FFBCDM|r: Trinket Bar",
     ["EssencesParentFrame"] = "Evoker Essences",
     ["EssentialCooldownViewer"] = "CDM Essential",
     ["UtilityCooldownViewer"] = "CDM Utility",
