@@ -50,6 +50,9 @@ An addon to display charges of an important spell as a bar. Everything works in 
   * Roll
 * Holy Paladin
   * Holy Shock
+* Holy Priest
+  * Holy Word: Sanctify
+  * Holy Word: Serenity
 * Elemental Shaman
   * Lava Burst
 * Restoration Shaman

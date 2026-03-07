@@ -133,7 +133,10 @@ Data.defaultTrackedSpellsBySpec = {
     [256] = {},
 
     -- Priest: Holy
-    [257] = {},
+    [257] = {
+        34861, -- Holy Word: Sanctify
+        2050, -- Holy Word: Serenity
+    },
 
     -- Priest: Shadow
     [258] = {},
