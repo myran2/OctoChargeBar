@@ -240,6 +240,7 @@ Settings.defaultValues = {
         name = 'Tick Color',
         kind = LEM.SettingType.ColorPicker,
         default = {0, 0, 0, 1},
+        hasOpacity = true
     },
     [Settings.keys.Position] = {
         name = 'Position',
