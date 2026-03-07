@@ -11,6 +11,12 @@ local LibSharedMedia = LibStub("LibSharedMedia-3.0")
 Settings.keys = {
     SpellId = "SPELL_ID",
     Enabled = "ENABLED",
+    AnchorFrame = "ANCHOR_FRAME",
+    AnchorFrameInheritWidth = "ANCHOR_FRAME_INHERIT_WIDTH",
+    AnchorFrameOffsetX = "ANCHOR_FRAME_OFFSET_X",
+    AnchorFrameOffsetY = "ANCHOR_FRAME_OFFSET_Y",
+    AnchorFrameTo = "ANCHOR_FRAME_TO",
+    AnchorFrameFrom = "ANCHOR_FRAME_FROM",
     Width = "WIDTH",
     Height = "HEIGHT",
     Color = "COLOR",
@@ -23,6 +29,25 @@ Settings.keys = {
     TickWidth = "TICK_WIDTH",
     TickColor = "TICK_COLOR",
     Position = "POSITION",
+}
+
+Settings.FrameAnchors = {
+    ["UIParent"] = "Manual",
+    ["EssencesParentFrame"] = "Evoker Essences",
+    ["EssentialCooldownViewer"] = "CDM Essential",
+    ["UtilityCooldownViewer"] = "CDM Utility",
+}
+
+Settings.AnchorPoints = {
+    "TOP",
+    "TOPLEFT",
+    "TOPRIGHT",
+    "CENTER",
+    "LEFT",
+    "RIGHT",
+    "BOTTOM",
+    "BOTTOMLEFT",
+    "BOTTOMRIGHT"
 }
 
 function Settings.GetDefaultEditModeFramePosition()
@@ -38,6 +63,87 @@ Settings.defaultValues = {
         name = 'Enabled',
         kind = LEM.SettingType.Checkbox,
         default = true,
+    },
+    [Settings.keys.AnchorFrame] = {
+        name = "Anchor Frame",
+        kind = LEM.SettingType.Dropdown,
+        default = "UIParent",
+        generator = function(owner, rootDescription, data)
+            for frameName, label in pairs(Settings.FrameAnchors) do
+                local function IsEnabled()
+                    return data.get(LEM:GetActiveLayoutName()) == frameName
+                end
+
+                local function SetProxy()
+                    return data.set(LEM:GetActiveLayoutName(), frameName)
+                end
+
+                -- remove nonexistant frames from the list
+                if not _G[frameName] then
+                    return
+                end
+
+                rootDescription:CreateRadio(label, IsEnabled, SetProxy)
+            end
+        end
+    },
+    [Settings.keys.AnchorFrameInheritWidth] = {
+        name = 'Inherit Width',
+        description = 'Inherit width of the frame we are anchored to.',
+        kind = LEM.SettingType.Checkbox,
+        default = false,
+    },
+    [Settings.keys.AnchorFrameOffsetX] = {
+        name = 'Anchor Offset X',
+        kind = LEM.SettingType.Slider,
+        default = 0,
+        minValue = -200,
+        maxValue = 200,
+        valueStep = 1,
+    },
+    [Settings.keys.AnchorFrameOffsetY] = {
+        name = 'Anchor Offset Y',
+        kind = LEM.SettingType.Slider,
+        default = 0,
+        minValue = -200,
+        maxValue = 200,
+        valueStep = 1,
+    },
+    [Settings.keys.AnchorFrameTo] = {
+        name = "Anchor To",
+        kind = LEM.SettingType.Dropdown,
+        default = "CENTER",
+        generator = function(owner, rootDescription, data)
+            for _, point in ipairs(Settings.AnchorPoints) do
+                local function IsEnabled()
+                    return data.get(LEM:GetActiveLayoutName()) == point
+                end
+
+                local function SetProxy()
+                    return data.set(LEM:GetActiveLayoutName(), point)
+                end
+
+                rootDescription:CreateRadio(point, IsEnabled, SetProxy)
+            end
+        end
+    },
+    [Settings.keys.AnchorFrameFrom] = {
+        name = "Anchor From",
+        kind = LEM.SettingType.Dropdown,
+        default = "CENTER",
+        generator = function(owner, rootDescription, data)
+            for _, point in ipairs(Settings.AnchorPoints) do
+                local function IsEnabled()
+                    return data.get(LEM:GetActiveLayoutName()) == point
+                end
+
+                local function SetProxy()
+                    return data.set(LEM:GetActiveLayoutName(), point)
+                end
+
+                rootDescription:CreateRadio(point, IsEnabled, SetProxy)
+            end
+        end
     },
     [Settings.keys.Width] = {
         name = 'Bar Width',
@@ -145,6 +251,12 @@ Settings.defaultValues = {
 function Settings.GetSettingsDisplayOrder()
     return {
         Settings.keys.Enabled,
+        Settings.keys.AnchorFrame,
+        Settings.keys.AnchorFrameInheritWidth,
+        Settings.keys.AnchorFrameOffsetX,
+        Settings.keys.AnchorFrameOffsetY,
+        Settings.keys.AnchorFrameTo,
+        Settings.keys.AnchorFrameFrom ,
         Settings.keys.Width,
         Settings.keys.Height,
         Settings.keys.Color,
