@@ -229,8 +229,8 @@ function ChargeBar:LEMSetup()
             elseif string.sub(key, 1, string.len(Settings.keys.AnchorFrame)) == Settings.keys.AnchorFrame then
                 return key ~= Settings.keys.AnchorFrame and Settings.Get(layoutName, self.spellId, Settings.keys.AnchorFrame) == "UIParent"
             -- Disable Width setting if we are inheriting width from the anchored frame
-            elseif key == Settings.keys.Width then
-                return Settings.Get(layoutName, self.spellId, Settings.keys.AnchorFrameInheritWidth)
+            -- elseif key == Settings.keys.Width then
+            --     return Settings.Get(layoutName, self.spellId, Settings.keys.AnchorFrameInheritWidth)
             end
             return not self.enabled
         end

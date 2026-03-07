@@ -32,7 +32,7 @@ Settings.keys = {
 }
 
 Settings.FrameAnchors = {
-    ["UIParent"] = "|cFF00AEF7Blizzard|r: UIParent (Do Not Anchor)",
+    ["UIParent"] = "|cFF00AEF7Blizzard|r: UIParent",
     ["PlayerFrame"] = "|cFF00AEF7Blizzard|r: Player Frame",
     ["TargetFrame"] = "|cFF00AEF7Blizzard|r: Target Frame",
     ["BCDM_PowerBar"] = "|cFF8080FFBCDM|r: Power Bar",
@@ -42,8 +42,6 @@ Settings.FrameAnchors = {
     ["BCDM_CustomItemSpellBar"] = "|cFF8080FFBCDM|r: Items/Spells Bar",
     ["BCDM_TrinketBar"] = "|cFF8080FFBCDM|r: Trinket Bar",
     ["EssencesParentFrame"] = "Evoker Essences",
-    ["EssentialCooldownViewer"] = "CDM Essential",
-    ["UtilityCooldownViewer"] = "CDM Utility",
 }
 
 Settings.AnchorPoints = {
@@ -248,6 +246,7 @@ Settings.defaultValues = {
         name = 'Tick Color',
         kind = LEM.SettingType.ColorPicker,
         default = {0, 0, 0, 1},
+        hasOpacity = true
     },
     [Settings.keys.Position] = {
         name = 'Position',
@@ -259,12 +258,12 @@ Settings.defaultValues = {
 function Settings.GetSettingsDisplayOrder()
     return {
         Settings.keys.Enabled,
-        Settings.keys.AnchorFrame,
-        Settings.keys.AnchorFrameInheritWidth,
-        Settings.keys.AnchorFrameOffsetX,
-        Settings.keys.AnchorFrameOffsetY,
-        Settings.keys.AnchorFrameTo,
-        Settings.keys.AnchorFrameFrom ,
+        -- Settings.keys.AnchorFrame,
+        -- Settings.keys.AnchorFrameInheritWidth,
+        -- Settings.keys.AnchorFrameOffsetX,
+        -- Settings.keys.AnchorFrameOffsetY,
+        -- Settings.keys.AnchorFrameTo,
+        -- Settings.keys.AnchorFrameFrom ,
         Settings.keys.Width,
         Settings.keys.Height,
         Settings.keys.Color,

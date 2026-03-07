@@ -119,7 +119,9 @@ Data.defaultTrackedSpellsBySpec = {
     },
 
     -- Paladin: Holy
-    [65] = {},
+    [65] = {
+        20473, -- Holy Shock
+    },
 
     -- Paladin: Protection
     [66] = {},
@@ -131,7 +133,10 @@ Data.defaultTrackedSpellsBySpec = {
     [256] = {},
 
     -- Priest: Holy
-    [257] = {},
+    [257] = {
+        34861, -- Holy Word: Sanctify
+        2050, -- Holy Word: Serenity
+    },
 
     -- Priest: Shadow
     [258] = {},
