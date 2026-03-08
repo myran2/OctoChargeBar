@@ -47,10 +47,11 @@ function ChargeBar:ApplySettings(settings)
         end)
     end
 
+    local barWidth = settings[Settings.keys.Width]
+
     -- Anchored to another frame
     if (settings[Settings.keys.AnchorFrame] or "UIParent") ~= "UIParent" then
-        local width = settings[Settings.keys.AnchorFrameInheritWidth] and EssentialCooldownViewer:GetWidth() or settings[Settings.keys.Width]
-        LPP.PSize(self.frame, width, settings[Settings.keys.Height])
+        self.frame:ClearAllPoints()
         self.frame:SetPoint(
             settings[Settings.keys.AnchorFrameFrom],
             settings[Settings.keys.AnchorFrame],
@@ -58,11 +59,19 @@ function ChargeBar:ApplySettings(settings)
             settings[Settings.keys.AnchorFrameOffsetX],
             settings[Settings.keys.AnchorFrameOffsetY]
         )
+        if settings[Settings.keys.AnchorFrameInheritWidth] and _G[settings[Settings.keys.AnchorFrame]] then
+            barWidth = _G[settings[Settings.keys.AnchorFrame]]:GetWidth()
+            if settings[Settings.keys.AnchorFrame] == "EssencesParentFrame" then
+                barWidth = EssentialCooldownViewer:GetWidth()
+            end
+        end
+
     -- Anchored to screen/UIParent
     else
-        LPP.PSize(self.frame, settings[Settings.keys.Width], settings[Settings.keys.Height])
         self.frame:SetPoint("CENTER", UIParent, settings[Settings.keys.Position].point, settings[Settings.keys.Position].x, settings[Settings.keys.Position].y)
     end
+
+    LPP.PSize(self.frame, barWidth, settings[Settings.keys.Height])
 
     local borderWidth = settings[Settings.keys.BorderWidth]
     if borderWidth > 0 then
@@ -229,8 +238,8 @@ function ChargeBar:LEMSetup()
             elseif string.sub(key, 1, string.len(Settings.keys.AnchorFrame)) == Settings.keys.AnchorFrame then
                 return key ~= Settings.keys.AnchorFrame and Settings.Get(layoutName, self.spellId, Settings.keys.AnchorFrame) == "UIParent"
             -- Disable Width setting if we are inheriting width from the anchored frame
-            -- elseif key == Settings.keys.Width then
-            --     return Settings.Get(layoutName, self.spellId, Settings.keys.AnchorFrameInheritWidth)
+            elseif key == Settings.keys.Width then
+                return Settings.Get(layoutName, self.spellId, Settings.keys.AnchorFrameInheritWidth)
             end
             return not self.enabled
         end

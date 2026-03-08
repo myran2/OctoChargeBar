@@ -32,9 +32,11 @@ Settings.keys = {
 }
 
 Settings.FrameAnchors = {
-    ["UIParent"] = "|cFF00AEF7Blizzard|r: UIParent",
+    ["UIParent"] = "|cFF00AEF7Blizzard|r: UIParent (Anchor to Screen)",
     ["PlayerFrame"] = "|cFF00AEF7Blizzard|r: Player Frame",
     ["TargetFrame"] = "|cFF00AEF7Blizzard|r: Target Frame",
+    ["EssentialCooldownViewer"] = "|cFF00AEF7Blizzard|r: CDM Essential",
+    ["UtilityCooldownViewer"] = "|cFF00AEF7Blizzard|r: CDM Utility",
     ["BCDM_PowerBar"] = "|cFF8080FFBCDM|r: Power Bar",
     ["BCDM_SecondaryPowerBar"] = "|cFF8080FFBCDM|r: Secondary Power Bar",
     ["BCDM_CustomCooldownViewer"] = "|cFF8080FFBCDM|r: Custom Bar",
@@ -42,6 +44,21 @@ Settings.FrameAnchors = {
     ["BCDM_CustomItemSpellBar"] = "|cFF8080FFBCDM|r: Items/Spells Bar",
     ["BCDM_TrinketBar"] = "|cFF8080FFBCDM|r: Trinket Bar",
     ["EssencesParentFrame"] = "Evoker Essences",
+}
+
+Settings.FrameAnchorOrder = {
+    "UIParent",
+    "PlayerFrame",
+    "TargetFrame",
+    "EssentialCooldownViewer",
+    "UtilityCooldownViewer",
+    "BCDM_PowerBar",
+    "BCDM_SecondaryPowerBar",
+    "BCDM_CustomCooldownViewer",
+    "BCDM_AdditionalCustomCooldownViewer",
+    "BCDM_CustomItemSpellBar",
+    "BCDM_TrinketBar",
+    "EssencesParentFrame",
 }
 
 Settings.AnchorPoints = {
@@ -75,18 +92,19 @@ Settings.defaultValues = {
         kind = LEM.SettingType.Dropdown,
         default = "UIParent",
         generator = function(owner, rootDescription, data)
-            for frameName, label in pairs(Settings.FrameAnchors) do
+            for _, frameName in ipairs(Settings.FrameAnchorOrder) do
+                -- remove nonexistant frames from the list
+                if not _G[frameName] then
+                    return
+                end
+
+                local label = Settings.FrameAnchors[frameName]
                 local function IsEnabled()
                     return data.get(LEM:GetActiveLayoutName()) == frameName
                 end
 
                 local function SetProxy()
                     return data.set(LEM:GetActiveLayoutName(), frameName)
-                end
-
-                -- remove nonexistant frames from the list
-                if not _G[frameName] then
-                    return
                 end
 
                 rootDescription:CreateRadio(label, IsEnabled, SetProxy)
@@ -258,12 +276,12 @@ Settings.defaultValues = {
 function Settings.GetSettingsDisplayOrder()
     return {
         Settings.keys.Enabled,
-        -- Settings.keys.AnchorFrame,
-        -- Settings.keys.AnchorFrameInheritWidth,
-        -- Settings.keys.AnchorFrameOffsetX,
-        -- Settings.keys.AnchorFrameOffsetY,
-        -- Settings.keys.AnchorFrameTo,
-        -- Settings.keys.AnchorFrameFrom ,
+        Settings.keys.AnchorFrame,
+        Settings.keys.AnchorFrameInheritWidth,
+        Settings.keys.AnchorFrameOffsetX,
+        Settings.keys.AnchorFrameOffsetY,
+        Settings.keys.AnchorFrameTo,
+        Settings.keys.AnchorFrameFrom,
         Settings.keys.Width,
         Settings.keys.Height,
         Settings.keys.Color,
