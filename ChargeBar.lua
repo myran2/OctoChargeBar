@@ -151,7 +151,6 @@ end
 -- If combat lockdown is active, the most recent, non-secret maxCharges value will be used instead.
 function ChargeBar:SetupCharges()
     if not self.enabled then
-        print('ChargeBar:SetupCharges:', self.spellId, 'not enabled.')
         return
     end
 
