@@ -148,7 +148,6 @@ function ChargeBar:ApplySettings(settings)
 end
 
 -- Sets up bars based on max charges.
--- If combat lockdown is active, the most recent, non-secret maxCharges value will be used instead.
 function ChargeBar:SetupCharges()
     if not self.enabled then
         return
@@ -172,34 +171,21 @@ function ChargeBar:SetupCharges()
     end
     self.ticksContainer.ticks = {}
 
-    if not issecretvalue(maxCharges) then
-        -- cache non-secret max charges value so we can fall back to it if we need it during combat lockdown.
-        -- (like after a /reload in a m+)
-        Data:SetCachedSpellMaxCharges(self.spellId, maxCharges)
-    else
-        local cachedMaxCharges = Data:GetCachedSpellMaxCharges(self.spellId)
-        if cachedMaxCharges then
-            maxCharges = cachedMaxCharges
-        end
-    end
+    local chargeWidth = self.innerContainer:GetWidth() / maxCharges
 
-    if not issecretvalue(maxCharges) then
-        local chargeWidth = self.innerContainer:GetWidth() / maxCharges
+    LPP.PWidth(self.refreshCharge, chargeWidth)
+    LPP.PHeight(self.refreshCharge, self.innerContainer:GetHeight())
 
-        LPP.PWidth(self.refreshCharge, chargeWidth)
-        LPP.PHeight(self.refreshCharge, self.innerContainer:GetHeight())
-
-        if self.showTicks then
-            for i = 1, maxCharges - 1 do
-                local tick = self.ticksContainer:CreateTexture(nil, "OVERLAY")
-                tick:SetColorTexture(unpack(self.tickColor))
-                LPP.PWidth(tick, self.tickWidth)
-                LPP.PHeight(tick, self.ticksContainer:GetHeight())
-                tick:SetPoint("CENTER", self.ticksContainer, "LEFT", chargeWidth * i, 0)
-                tick:SetTexelSnappingBias(0)
-                tick:SetSnapToPixelGrid(false)
-                table.insert(self.ticksContainer.ticks, tick)
-            end
+    if self.showTicks then
+        for i = 1, maxCharges - 1 do
+            local tick = self.ticksContainer:CreateTexture(nil, "OVERLAY")
+            tick:SetColorTexture(unpack(self.tickColor))
+            LPP.PWidth(tick, self.tickWidth)
+            LPP.PHeight(tick, self.ticksContainer:GetHeight())
+            tick:SetPoint("CENTER", self.ticksContainer, "LEFT", chargeWidth * i, 0)
+            tick:SetTexelSnappingBias(0)
+            tick:SetSnapToPixelGrid(false)
+            table.insert(self.ticksContainer.ticks, tick)
         end
     end
 
