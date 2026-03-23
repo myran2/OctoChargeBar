@@ -53,11 +53,11 @@ function ChargeBar:ApplySettings(settings)
     if (settings[Settings.keys.AnchorFrame] or "UIParent") ~= "UIParent" then
         self.frame:ClearAllPoints()
         self.frame:SetPoint(
-            settings[Settings.keys.AnchorFrameFrom],
+            settings[Settings.keys.AnchorFrameFrom] or "CENTER",
             settings[Settings.keys.AnchorFrame],
-            settings[Settings.keys.AnchorFrameTo],
-            settings[Settings.keys.AnchorFrameOffsetX],
-            settings[Settings.keys.AnchorFrameOffsetY]
+            settings[Settings.keys.AnchorFrameTo] or "CENTER",
+            settings[Settings.keys.AnchorFrameOffsetX] or 0,
+            settings[Settings.keys.AnchorFrameOffsetY] or 0
         )
         if settings[Settings.keys.AnchorFrameInheritWidth] and _G[settings[Settings.keys.AnchorFrame]] then
             barWidth = _G[settings[Settings.keys.AnchorFrame]]:GetWidth()
