@@ -92,7 +92,6 @@ function ChargeBar:ApplySettings(settings)
     LPP.PWidth(self.innerContainer, self.frame:GetWidth() - (borderWidth * 2))
     LPP.PHeight(self.innerContainer, self.frame:GetHeight() - (borderWidth * 2))
     self.innerContainer:SetPoint("CENTER", self.frame, "CENTER")
-    self.innerContainer:SetClipsChildren(true)
 
     self.chargeFrame = self.chargeFrame or CreateFrame("StatusBar", "ChargesBar", self.innerContainer)
     LPP.PWidth(self.chargeFrame, self.innerContainer:GetWidth())
