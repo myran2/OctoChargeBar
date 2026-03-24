@@ -112,7 +112,7 @@ function ChargeBar:ApplySettings(settings)
     )
     if settings[Settings.keys.RechargeTextShow] then
         self.refreshCharge:SetScript("OnUpdate", function()
-            if self.refreshCharge:GetTimerDuration() then
+            if self.refreshCharge:GetTimerDuration() and self.refreshCharge.isActive then
                 local rechargeDuration = self.refreshCharge:GetTimerDuration():GetRemainingDuration()
                 self.refreshCharge.text:SetFormattedText("%.1f", rechargeDuration)
             else
@@ -239,6 +239,10 @@ function ChargeBar:HandleSpellUpdateCharges()
         return
     end
     self.chargeFrame:SetValue(C_Spell.GetSpellCharges(self.spellId).currentCharges)
+
+    local chargeInfo = C_Spell.GetSpellCharges(self.spellId)
+    self.refreshCharge.isActive = chargeInfo.isActive
+
     self.refreshCharge:SetTimerDuration(
         C_Spell.GetSpellChargeDuration(self.spellId),
         Enum.StatusBarInterpolation.Immediate,
