@@ -1,4 +1,4 @@
-## Interface: 120000, 120001, 120005
+## Interface: 120007,120100
 ## Title: OctoChargeBar
 ## SavedVariables: OctoChargeBarDB
 ## Notes: Represent cooldowns of charge-based spells with a bar
