@@ -124,22 +124,30 @@ Data.defaultTrackedSpellsBySpec = {
     },
 
     -- Paladin: Protection
-    [66] = {},
+    [66] = {
+        275779, -- Judgement
+    },
 
     -- Paladin: Retribution
     [70] = {},
 
     -- Priest: Discipline
-    [256] = {},
+    [256] = {
+        194509, -- Power Word: Radiance
+        121536, -- Angelic Feather
+    },
 
     -- Priest: Holy
     [257] = {
         34861, -- Holy Word: Sanctify
         2050, -- Holy Word: Serenity
+        121536, -- Angelic Feather
     },
 
     -- Priest: Shadow
-    [258] = {},
+    [258] = {
+        121536, -- Angelic Feather
+    },
 
     -- Rogue: Assassination
     [259] = {},
