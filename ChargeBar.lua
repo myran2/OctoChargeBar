@@ -258,8 +258,4 @@ end
 function ChargeBar:onSettingChanged(layoutName, key, value)
     local settings = Data:GetLayoutBarSettings(layoutName, self.spellId)
     self:ApplySettings(settings)
-    -- Most widgets will auto-refresh inside LEM. The only exception is the anchorframe dropdown.
-    if key == Settings.keys.AnchorFrame then
-        LEM:RefreshFrameSettings(self.frame)
-    end
 end

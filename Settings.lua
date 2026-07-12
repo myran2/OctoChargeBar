@@ -37,12 +37,8 @@ Settings.FrameAnchors = {
     ["TargetFrame"] = "|cFF00AEF7Blizzard|r: Target Frame",
     ["EssentialCooldownViewer"] = "|cFF00AEF7Blizzard|r: CDM Essential",
     ["UtilityCooldownViewer"] = "|cFF00AEF7Blizzard|r: CDM Utility",
-    ["BCDM_PowerBar"] = "|cFF8080FFBCDM|r: Power Bar",
-    ["BCDM_SecondaryPowerBar"] = "|cFF8080FFBCDM|r: Secondary Power Bar",
-    ["BCDM_CustomCooldownViewer"] = "|cFF8080FFBCDM|r: Custom Bar",
-    ["BCDM_AdditionalCustomCooldownViewer"] = "|cFF8080FFBCDM|r: Additional Custom Bar",
-    ["BCDM_CustomItemSpellBar"] = "|cFF8080FFBCDM|r: Items/Spells Bar",
-    ["BCDM_TrinketBar"] = "|cFF8080FFBCDM|r: Trinket Bar",
+    ["UUF_Player"] = "|cFF8080FFUUF|r: Player Frame",
+    ["UUF_Target"] = "|cFF8080FFUUF|r: Target Frame",
     ["EssencesParentFrame"] = "Evoker Essences",
 }
 
@@ -52,13 +48,9 @@ Settings.FrameAnchorOrder = {
     "TargetFrame",
     "EssentialCooldownViewer",
     "UtilityCooldownViewer",
-    "BCDM_PowerBar",
-    "BCDM_SecondaryPowerBar",
-    "BCDM_CustomCooldownViewer",
-    "BCDM_AdditionalCustomCooldownViewer",
-    "BCDM_CustomItemSpellBar",
-    "BCDM_TrinketBar",
     "EssencesParentFrame",
+    "UUF_Player",
+    "UUF_Target",
 }
 
 Settings.AnchorPoints = {
@@ -91,25 +83,18 @@ Settings.defaultValues = {
         name = "Anchor Frame",
         kind = LEM.SettingType.Dropdown,
         default = "UIParent",
-        generator = function(owner, rootDescription, data)
+        values = function()
+            local values = {}
             for _, frameName in ipairs(Settings.FrameAnchorOrder) do
-                -- remove nonexistant frames from the list
-                if not _G[frameName] then
-                    return
+                if _G[frameName] then
+                    table.insert(values, {
+                        text = Settings.FrameAnchors[frameName],
+                        value = frameName,
+                    })
                 end
-
-                local label = Settings.FrameAnchors[frameName]
-                local function IsEnabled()
-                    return data.get(LEM:GetActiveLayoutName()) == frameName
-                end
-
-                local function SetProxy()
-                    return data.set(LEM:GetActiveLayoutName(), frameName)
-                end
-
-                rootDescription:CreateRadio(label, IsEnabled, SetProxy)
             end
-        end
+            return values
+        end,
     },
     [Settings.keys.AnchorFrameInheritWidth] = {
         name = 'Inherit Width',
@@ -137,37 +122,25 @@ Settings.defaultValues = {
         name = "Anchor To",
         kind = LEM.SettingType.Dropdown,
         default = "CENTER",
-        generator = function(owner, rootDescription, data)
+        values = function()
+            local values = {}
             for _, point in ipairs(Settings.AnchorPoints) do
-                local function IsEnabled()
-                    return data.get(LEM:GetActiveLayoutName()) == point
-                end
-
-                local function SetProxy()
-                    return data.set(LEM:GetActiveLayoutName(), point)
-                end
-
-                rootDescription:CreateRadio(point, IsEnabled, SetProxy)
+                table.insert(values, { text = point, value = point })
             end
-        end
+            return values
+        end,
     },
     [Settings.keys.AnchorFrameFrom] = {
         name = "Anchor From",
         kind = LEM.SettingType.Dropdown,
         default = "CENTER",
-        generator = function(owner, rootDescription, data)
+        values = function()
+            local values = {}
             for _, point in ipairs(Settings.AnchorPoints) do
-                local function IsEnabled()
-                    return data.get(LEM:GetActiveLayoutName()) == point
-                end
-
-                local function SetProxy()
-                    return data.set(LEM:GetActiveLayoutName(), point)
-                end
-
-                rootDescription:CreateRadio(point, IsEnabled, SetProxy)
+                table.insert(values, { text = point, value = point })
             end
-        end
+            return values
+        end,
     },
     [Settings.keys.Width] = {
         name = 'Bar Width',
