@@ -107,18 +107,23 @@ function ChargeBar:ApplySettings(settings)
         settings[Settings.keys.RechargeTextSize],
         "OUTLINE"
     )
-    if settings[Settings.keys.RechargeTextShow] then
-        self.refreshCharge:SetScript("OnUpdate", function()
-            if self.refreshCharge:GetTimerDuration() and self.refreshCharge.isActive then
-                local rechargeDuration = self.refreshCharge:GetTimerDuration():GetRemainingDuration()
-                self.refreshCharge.text:SetFormattedText("%.1f", rechargeDuration)
-            else
-                self.refreshCharge.text:SetText("")
-            end
-        end)
-    else
+    self.showRechargeText = settings[Settings.keys.RechargeTextShow]
+    if not self.durationBinding then
+        local formatter = C_StringUtil.CreateNumericRuleFormatter()
+        formatter:SetBreakpoints({
+            { threshold = 0, format = "%.1f" },
+            { threshold = 10, format = "%d", step = 1 },
+        })
+
+        self.durationBinding = C_DurationUtil.CreateDurationTextBinding()
+        self.durationBinding:SetFontString(self.refreshCharge.text)
+        self.durationBinding:SetFormatter(formatter)
+        self.durationBinding:SetExpiredText("")
+        self.durationBinding:SetZeroDurationText("")
+    end
+    if not self.showRechargeText then
+        self.durationBinding:SetEnabled(false)
         self.refreshCharge.text:SetText("")
-        self.refreshCharge:SetScript("OnUpdate", nil)
     end
 
     self.ticksContainer = self.ticksContainer or CreateFrame("Frame", "TicksContainer", self.innerContainer)
@@ -240,11 +245,15 @@ function ChargeBar:HandleSpellUpdateCharges()
     local chargeInfo = C_Spell.GetSpellCharges(self.spellId)
     self.refreshCharge.isActive = chargeInfo.isActive
 
+    local chargeDuration = C_Spell.GetSpellChargeDuration(self.spellId)
     self.refreshCharge:SetTimerDuration(
-        C_Spell.GetSpellChargeDuration(self.spellId),
+        chargeDuration,
         Enum.StatusBarInterpolation.Immediate,
         Enum.StatusBarTimerDirection.ElapsedTime
     )
+
+    self.durationBinding:SetDuration(chargeDuration)
+    self.durationBinding:SetEnabled(self.showRechargeText and chargeInfo.isActive)
 end
 
 function ChargeBar:onPositionChanged(layoutName, point, x, y)
