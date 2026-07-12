@@ -40,6 +40,12 @@ Settings.FrameAnchors = {
     ["UUF_Player"] = "|cFF8080FFUUF|r: Player Frame",
     ["UUF_Target"] = "|cFF8080FFUUF|r: Target Frame",
     ["EssencesParentFrame"] = "Evoker Essences",
+    ["BCDM_PowerBar"] = "|cFF8080FFBCDM|r: Power Bar",
+    ["BCDM_SecondaryPowerBar"] = "|cFF8080FFBCDM|r: Secondary Power Bar",
+    ["BCDM_CustomCooldownViewer"] = "|cFF8080FFBCDM|r: Custom Bar",
+    ["BCDM_AdditionalCustomCooldownViewer"] = "|cFF8080FFBCDM|r: Additional Custom Bar",
+    ["BCDM_CustomItemSpellBar"] = "|cFF8080FFBCDM|r: Items/Spells Bar",
+    ["BCDM_TrinketBar"] = "|cFF8080FFBCDM|r: Trinket Bar",
 }
 
 Settings.FrameAnchorOrder = {
@@ -51,6 +57,12 @@ Settings.FrameAnchorOrder = {
     "EssencesParentFrame",
     "UUF_Player",
     "UUF_Target",
+    "BCDM_PowerBar",
+    "BCDM_SecondaryPowerBar",
+    "BCDM_CustomCooldownViewer",
+    "BCDM_AdditionalCustomCooldownViewer",
+    "BCDM_CustomItemSpellBar",
+    "BCDM_TrinketBar",
 }
 
 Settings.AnchorPoints = {
