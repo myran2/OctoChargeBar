@@ -49,8 +49,8 @@ function ChargeBar:ApplySettings(settings)
 
     local barWidth = settings[Settings.keys.Width]
 
-    -- Anchored to another frame
-    if (settings[Settings.keys.AnchorFrame] or "UIParent") ~= "UIParent" then
+    -- Anchored to another frame and that frame exists
+    if (settings[Settings.keys.AnchorFrame] or "UIParent") ~= "UIParent" and (_G[settings[Settings.keys.AnchorFrame]]) then
         self.frame:ClearAllPoints()
         self.frame:SetPoint(
             settings[Settings.keys.AnchorFrameFrom] or "CENTER",
@@ -61,9 +61,6 @@ function ChargeBar:ApplySettings(settings)
         )
         if settings[Settings.keys.AnchorFrameInheritWidth] and _G[settings[Settings.keys.AnchorFrame]] then
             barWidth = _G[settings[Settings.keys.AnchorFrame]]:GetWidth()
-            if settings[Settings.keys.AnchorFrame] == "EssencesParentFrame" then
-                barWidth = EssentialCooldownViewer:GetWidth()
-            end
         end
 
     -- Anchored to screen/UIParent
@@ -261,5 +258,8 @@ end
 function ChargeBar:onSettingChanged(layoutName, key, value)
     local settings = Data:GetLayoutBarSettings(layoutName, self.spellId)
     self:ApplySettings(settings)
-    LEM:RefreshFrameSettings(self.frame)
+    -- Most widgets will auto-refresh inside LEM. The only exception is the anchorframe dropdown.
+    if key == Settings.keys.AnchorFrame then
+        LEM:RefreshFrameSettings(self.frame)
+    end
 end

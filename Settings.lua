@@ -317,12 +317,13 @@ function Settings.Set(layoutName, spellId, key, value)
     local specId = Util:GetActiveSpecId()
     assert(Data.db.global[layoutName][specId].specBars[spellId])
 
-    if Settings.GetLEMSettingsObject(key).kind == LEM.SettingType.ColorPicker then
-        value = {value:GetRGBA()}
-    end
-
     local currentValue = Settings.Get(layoutName, spellId, key)
-    if currentValue == value then
+    if Settings.GetLEMSettingsObject(key).kind == LEM.SettingType.ColorPicker then
+        if currentValue:IsEqualTo(value) then
+            return
+        end
+        value = {value:GetRGBA()}
+    elseif currentValue == value then
         return
     end
 
